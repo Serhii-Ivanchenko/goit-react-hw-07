@@ -1,5 +1,3 @@
-
-
 import './App.css';
 import ContactForm from '../ContactForm/ContactForm';
 import SearchBox from '../SearchBox/SearchBox';
