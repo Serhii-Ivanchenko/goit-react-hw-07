@@ -4,6 +4,7 @@ import { useId } from 'react';
 import * as Yup from 'yup';
 import css from './ContactForm.module.css';
 import { addContact } from '../../redux/contactsOps';
+import toast, { Toaster } from 'react-hot-toast';
 // import { addContact } from '../../redux/contactsSlice';
 
 const validationSchema = Yup.object().shape({
@@ -24,36 +25,46 @@ export default function ContactForm() {
   const numberFieldId = useId();
 
   return (
-    <Formik
-      initialValues={{
-        id: '',
-        name: '',
-        number: '',
-      }}
-      validationSchema={validationSchema}
-      onSubmit={(values, actions) => {
-        dispatch(
-          addContact({
-            name: values.name,
-            number: values.number,
-          })
-        );
-        actions.resetForm();
-      }}
-    >
-      <Form className={css.form}>
-        <label htmlFor={nameFieldId}>Name</label>
-        <Field name="name" type="text" id={nameFieldId} />
-        <ErrorMessage className={css.error} name="name" component="span" />
+    <>
+      <Formik
+        initialValues={{
+          id: '',
+          name: '',
+          number: '',
+        }}
+        validationSchema={validationSchema}
+        onSubmit={(values, actions) => {
+          dispatch(
+            addContact({
+              name: values.name,
+              number: values.number,
+            })
+          )
+            .unwrap()
+            .then(() => {
+              toast.success('Contact successfully added!');
+            })
+            .catch(err => {
+              toast.error(`${err.message}`);
+            });
+          actions.resetForm();
+        }}
+      >
+        <Form className={css.form}>
+          <label htmlFor={nameFieldId}>Name</label>
+          <Field name="name" type="text" id={nameFieldId} />
+          <ErrorMessage className={css.error} name="name" component="span" />
 
-        <label htmlFor={numberFieldId}>Number</label>
-        <Field name="number" type="text" id={numberFieldId} />
-        <ErrorMessage className={css.error} name="number" component="span" />
+          <label htmlFor={numberFieldId}>Number</label>
+          <Field name="number" type="text" id={numberFieldId} />
+          <ErrorMessage className={css.error} name="number" component="span" />
 
-        <button className={css.btn} type="submit">
-          Add contact
-        </button>
-      </Form>
-    </Formik>
+          <button className={css.btn} type="submit">
+            Add contact
+          </button>
+        </Form>
+      </Formik>
+      <Toaster />
+    </>
   );
 }
