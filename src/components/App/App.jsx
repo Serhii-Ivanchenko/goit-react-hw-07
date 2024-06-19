@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchContacts } from '../../redux/contactsOps';
 import { selectError, selectLoading } from '../../redux/contactsSlice';
 
+
 function App() {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectLoading);
@@ -19,7 +20,7 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div>
+    <div className="appContainer">
       <h1>Phonebook</h1>
 
       <ContactForm />
